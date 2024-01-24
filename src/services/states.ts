@@ -1,14 +1,8 @@
-export interface RowState {
-    disabled: boolean
-    operator: '+' | '-'
-    value: number
-}
+export type Operator = '+' | '-'
 
 export interface RowStateObject {
     id: number
     disabled: boolean
-    operator: '+' | '-'
+    operator: Operator
     value: number
 }
-
-export type RowStates = Record<string, RowState>

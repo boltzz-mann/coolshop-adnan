@@ -1,9 +1,9 @@
 import { ChangeEvent, Dispatch } from 'react'
-import { RowStateObject } from '../../services/states'
+import { Operator, RowStateObject } from '../../services/states'
 import { Action } from '../../services/actions'
 
 // caution DO NOT USE key here, it wont update with state
-interface Props {
+interface InputRowProps {
     key: number
     row: RowStateObject
     dispatchRows: Dispatch<Action>
@@ -11,31 +11,36 @@ interface Props {
 
 // Add styling
 // See if
-function InputRow({ row, dispatchRows }: Props) {
+function InputRow({ row, dispatchRows }: InputRowProps) {
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        // Note: We are not handling 'NaN' here as we do not want to add trailing zero in the field
+        let value = parseInt(e.target.value)
+
         return dispatchRows({
             type: 'UPDATE_VAL',
             rowId: row.id,
-            value: e.target.value
+            value
         })
     }
 
     const opChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+        // We want a default operator as '+' in case of invalid operators
+        let operator: Operator = e.target.value === '-' ? '-' : '+'
+
         dispatchRows({
             type: 'CHANGE_OPERATOR',
             rowId: row.id,
-            operator: e.target.value as '+' | '-'
+            operator
         })
     }
 
     return (
-        <div className="">
+        <div className=" flex gap-4">
             <select
                 disabled={row.disabled}
-                className="disabled:bg-gray-300 disabled:text-gray-500"
+                className="rounded-md border border-black p-2 disabled:border-gray-500 disabled:bg-gray-300 disabled:text-gray-500"
                 value={row.operator}
                 onChange={opChangeHandler}
-                id=""
             >
                 <option value="+">+</option>
                 <option value="-">-</option>
@@ -46,12 +51,12 @@ function InputRow({ row, dispatchRows }: Props) {
                 value={row.value}
                 type="number"
                 onChange={changeHandler}
-                className="disabled:bg-gray-300 disabled:text-gray-500"
+                className="rounded-md border border-black px-2 disabled:border-gray-500 disabled:bg-gray-300 disabled:text-gray-500"
                 min={0}
             />
 
             <button
-                className=""
+                className="rounded-md bg-black px-4 py-2 text-white"
                 onClick={() =>
                     dispatchRows({ type: 'TOGGLE_ROW', rowId: row.id })
                 }
@@ -60,12 +65,12 @@ function InputRow({ row, dispatchRows }: Props) {
             </button>
 
             <button
-                className=""
+                className="rounded-md bg-black px-4 py-2 text-white"
                 onClick={() =>
                     dispatchRows({ type: 'REMOVE_ROW', rowId: row.id })
                 }
             >
-                Remove Field
+                Delete
             </button>
         </div>
     )

@@ -3,6 +3,8 @@ import { RowStateObject } from './states'
 
 var rowCount = 1
 
+// Note: Object can be used instead of arrays for better performance
+//     : at the cost of more memory/space
 export function inputRowReducer(
     // state: Record<number, RowStateObject>,
     state: RowStateObject[],
@@ -17,7 +19,7 @@ export function inputRowReducer(
                 id: rowCount,
                 disabled: false,
                 operator: '+',
-                value: 0
+                value: 10
             })
             rowCount += 1
             return newSate
@@ -33,7 +35,7 @@ export function inputRowReducer(
 
         case 'UPDATE_VAL':
             return newSate.map((row) => {
-                if (row.id === action.rowId) row.value = parseInt(action.value)
+                if (row.id === action.rowId) row.value = action.value
                 return row
             })
 
@@ -47,47 +49,3 @@ export function inputRowReducer(
             return state
     }
 }
-
-// using objects
-// export function inputRowReducer(
-//     // state: InputRowState[],
-//     // state: Record<number, RowStateObject>,
-//     state: RowStates,
-//     action: Action
-// ) {
-//     const { type } = action
-
-//     // let newSate = [...state]
-//     let newSate = { ...state }
-
-//     const count = Object.keys(newSate).length
-
-//     switch (type) {
-//         case 'ADD_ROW':
-//             newSate[count] = {
-//                 disabled: false,
-//                 operator: '+',
-//                 value: 0
-//             }
-//             return newSate
-
-//         case 'REMOVE_ROW':
-//             delete newSate[action.rowId]
-//             return newSate
-
-//         case 'TOGGLE_ROW':
-//             newSate[action.rowId].disabled = !newSate[action.rowId].disabled
-//             return newSate
-
-//         case 'UPDATE_VAL':
-//             newSate[action.rowId].value = action.value
-//             return newSate
-
-//         case 'CHANGE_OPERATOR':
-//             newSate[action.rowId].operator = action.operator
-//             return newSate
-
-//         default:
-//             return state
-//     }
-// }

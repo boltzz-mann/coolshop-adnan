@@ -16,7 +16,7 @@ interface ToggleRow {
 interface UpdateVal {
     type: 'UPDATE_VAL'
     rowId: number
-    value: string
+    value: number
 }
 
 interface ChangeOperator {
